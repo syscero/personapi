@@ -6,11 +6,10 @@ import one.digitalinnovation.personapi.entity.Person;
 import one.digitalinnovation.personapi.mapper.PersonMapper;
 import one.digitalinnovation.personapi.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
@@ -41,5 +40,13 @@ public class PersonService {
 
     public List<Person> findAll() {
         return personRepository.findAll();
+    }
+
+    public List<PersonDTO> listAll() {
+        List<Person> all = personRepository.findAll();
+
+        return all.stream()
+                .map(personMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
