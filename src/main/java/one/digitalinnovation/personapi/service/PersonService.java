@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,10 +63,19 @@ public class PersonService {
      * @throws PersonNotFoundException
      */
     public PersonDTO findById(Long id) throws PersonNotFoundException {
-        Person item = personRepository
-                .findById(id)
-                .orElseThrow(() -> new PersonNotFoundException(id));
+        Person item = findByIdOrThrow(id);
 
         return personMapper.toDTO(item);
+    }
+
+    public void delete(Long id) throws PersonNotFoundException {
+        findByIdOrThrow(id);
+        personRepository.deleteById(id);
+    }
+
+    private Person findByIdOrThrow(Long id) throws PersonNotFoundException {
+        return personRepository
+                .findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
     }
 }
